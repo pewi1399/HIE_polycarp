@@ -7,9 +7,9 @@ library(tidyr)
 # read data
 dat <- readRDS("Output/1_get_data.rds")
 setDT(dat)
-metadata <- readxl::read_excel("Diagnoskoder/dataDictionary.xlsx", sheet = 1)
+metadata <- openxlsx::read.xlsx("Diagnoskoder/dataDictionary.xlsx", sheet = 1)
 #fix this by changing input method or by deleting columns in excel file
-metadata <- metadata[,1:117]
+#metadata <- metadata[,1:117]
 
 # ---------------------------- prepare metadata --------------------------------
 # collapse all code variables
@@ -41,11 +41,12 @@ metadataBarn <- subset(metadata, Group == "barn")
 # split singles and factors
 metadataMorSingle <- subset(metadataMor, factor == "nej" & source == "mfr")
 metadataMorFactor <- subset(metadataMor, factor == "ja")
+metadataMorOp <-  subset(metadataMor, factor == "nej" & source == "mfrop")
 
 # test that all diags are still there
 test_that("rows add up",
           expect_equal(nrow(subset(metadata, Group == "mor" | Group == "barn")), nrow(metadataMorSingle) +
-                         nrow(metadataMorFactor) + nrow(metadataBarn))
+                         nrow(metadataMorFactor) + nrow(metadataBarn) + nrow(metadataMorOp))
 )
 
 # if all child diagnoses are not of factor type then no need to split "metadatabarn"
