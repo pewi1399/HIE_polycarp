@@ -1,0 +1,86 @@
+# https://gist.github.com/octocat/9257657
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+ 
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+ 
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# data #
+##########
+*.sav
+*.dta
+*.csv
+*.xlsx
+*.xls
+*.txt
+*.sas7bdat
+ 
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.onetoc2
+
+# R #
+#####
+.Rproj.user
+.Rhistory
+.RData
+
+# Project specific #
+####################
+*.html
+*.atfi
+*.lof
+*.lot
+*.log
+*.pdf
+*.tex
+*.bbl
+*.docx
+*.toc
+/cache
+/tex2*
+*_cache
+test.*
+*_files
+*.md
+!/documents/*.md
+!README.md
+!/documents/*.md
+!/templates/*.html # save templates
+!/SQL/*.sql
+/data/*.* # data should not be saved
+/data/*
+/statusReport
+/excel
+/sandbox/*
+!data/README.md
+
