@@ -2,6 +2,7 @@ rm(list = ls())
 library(dplyr)
 library(testthat)
 library(data.table)
+library(openxlsx)
 
 # print delivered files
 list.files("Indata/Leverans_April_2017")
@@ -53,12 +54,12 @@ snq_vars <- c("Antal_foster", "BARN_Ordn_nr", "G___v_", "K_n", "Vattenavg_ng",
               "lopnr_mamma_snq") 
 
 # create temporary dataset
-snq <- dat[1:10000,snq_vars]
+snq <- dat[,snq_vars]
 
 # split variables by class
 snq_classes <- sapply(dat[,snq_vars], class)
 
-table(snq_classes)
+#table(snq_classes)
 
 snq_numeric <- names(snq_classes[snq_classes == "numeric"])
 snq_integer <- names(snq_classes[snq_classes == "integer"])
@@ -78,6 +79,28 @@ factor_table_list_before <- lapply(snq[,snq_factor], function(x){ table(x, useNA
 snq[,snq_factor] <- lapply(snq[,snq_factor], as.character)
 snq[,snq_factor] <- lapply(snq[,snq_factor], function(x){ifelse(x == "", NA, x)})
 
+# create factor ensuring no unused levels are inherited
+snq[,snq_factor] <- lapply(snq[,snq_factor], as.factor)
+
+# create function that creates a dictionary
+dictionary_builder <- function(fvar, data){
+  
+  print(fvar)
+  
+  labels <- levels(data[, fvar])
+  out <- data.frame(var = fvar,
+                    value = 1:length(labels), 
+                    label = labels)
+  return(out)
+}
+
+factor_dictionary <- lapply(snq_factor, dictionary_builder, data = snq)
+factor_dictionary <- do.call("rbind", factor_dictionary)
+
+# convert factors back to numeric 
+snq[,snq_factor] <- lapply(snq[,snq_factor], as.numeric)
+
+
 # list all corrected factors
 factor_table_list_after <- lapply(snq[,snq_factor], function(x){ table(x, useNA = "always")})
 
@@ -92,9 +115,13 @@ for(variable in snq_factor){
   names(oldData) <- c("Notering", "Antal")
   
   newData <- data.frame(factor_table_list_after[variable])
-  names(newData) <- c("Notering", "Antal")
+  names(newData) <- c("value", "Antal")
   
-  addStyle(wb, 
+ newData <- merge(newData, subset(factor_dictionary, var == variable), by = "value", all.x = TRUE) %>% 
+   select(value, label, Antal)
+  
+  
+  openxlsx::addStyle(wb, 
            sheet = substr(variable,1,31), 
            createStyle(fgFill = "#FF6666"),
            rows = 1:(nrow(oldData)+1),
@@ -102,11 +129,11 @@ for(variable in snq_factor){
            gridExpand = TRUE
   )
   
-  addStyle(wb, 
+  openxlsx::addStyle(wb, 
            sheet = substr(variable,1,31), 
            createStyle(fgFill = "#99e699"),
            rows = 1:(nrow(newData)+1),
-           cols = 4:5,
+           cols = 4:6,
            gridExpand = TRUE
   )
   

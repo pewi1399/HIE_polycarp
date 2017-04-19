@@ -300,3 +300,7 @@ test_that("no new NAs in GRVBS class",
 # 1 "1. Vecka 36-39+9"
 # 2 "2. Vecka 40-41+6"
 # 3 "3. >vecka 42"
+
+#----------------------------- print file --------------------------------------
+saveRDS("Output/3_derivations.rds")
+
