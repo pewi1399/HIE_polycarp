@@ -101,8 +101,8 @@ mamma <-
             per_100000 = round(100000*mean(variabel))
   )
 
-write.csv2(barn, "Output/2_diagnoses_barn.csv")
-write.csv2(mamma, "Output/2_diagnoses_mamma.csv")
+openxlsx::write.xlsx(barn, "Output/2_diagnoses_barn.xlsx")
+openxlsx::write.xlsx(mamma, "Output/2_diagnoses_mamma.xlsx")
 #-------------------------------------------------------------------------------
 # loop in factor variables
 # metadataMorFactor$factorLevel <- ifelse(is.na(metadataMorFactor$factorLevel),

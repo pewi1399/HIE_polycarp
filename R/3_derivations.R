@@ -3,10 +3,13 @@ library(dplyr)
 library(testthat)
 library(data.table)
 library(tidyr)
+library(openxlsx)
 
 # read data
 dat <- readRDS("Output/2_diagnoses.rds")
 
+
+names_before <- names(dat)
 
 # derivation from mfr variables
 dat$MLANGD <- ifelse(dat$MLANGD>200 | dat$MLANGD < 130, NA, dat$MLANGD)
@@ -301,6 +304,48 @@ test_that("no new NAs in GRVBS class",
 # 2 "2. Vecka 40-41+6"
 # 3 "3. >vecka 42"
 
+
+
 #----------------------------- print file --------------------------------------
-saveRDS("Output/3_derivations.rds")
+dat <- data.frame(dat) 
+saveRDS(dat, "Output/3_derivations.rds")
+
+#------------------------------ log file ---------------------------------------
+
+new_names <- names(dat)[!(names(dat) %in% names_before)]
+
+wb <- openxlsx::createWorkbook()
+for(variable in new_names){
+  print(variable)
+  
+  # max length for sheetname is 31 characters
+  openxlsx::addWorksheet(wb = wb, sheetName = substr(variable,1,31))
+  
+  
+  
+  newData <- data.frame(table(dat[, variable]))
+
+  
+  #newData <- merge(newData, subset(factor_dictionary, var == variable), by = "value", all.x = TRUE) %>% 
+  #  select(value, label, Antal)
+  
+  
+  #openxlsx::addStyle(wb, 
+  #                   sheet = substr(variable,1,31), 
+  #                   createStyle(fgFill = "#FF6666"),
+  #                   rows = 1:(nrow(oldData)+1),
+  #                   cols = 1:2,
+  #                   gridExpand = TRUE
+  #)
+  
+  
+  openxlsx::writeData(wb = wb, 
+                      sheet = substr(variable, 1,31),
+                      startCol = 1,
+                      newData
+  )
+
+}
+
+openxlsx::saveWorkbook(wb, "Output/3_derived_variables.xlsx", overwrite = TRUE)
 

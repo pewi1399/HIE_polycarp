@@ -284,5 +284,5 @@ saveRDS(out, "Output/1_get_data.rds")
 write.csv2(out, "Output/1_get_data.csv")
 
 # write log files 
-write.csv2(listing_dataframe, "Output/1_listings.csv")
-write.csv2(overlap_dataframe, "Output/1_overlap.csv")
+openxlsx::write.xlsx(listing_dataframe, "Output/1_listings.xlsx")
+openxlsx::write.xlsx(overlap_dataframe, "Output/1_overlap.xlsx")
