@@ -7,6 +7,7 @@ library(openxlsx)
 
 # read data
 dat <- readRDS("Output/2_diagnoses.rds")
+labelDictionary <- openxlsx::read.xlsx("Diagnoskoder/labelDictionary.xlsx", sheet = 1)
 
 
 names_before <- names(dat)
@@ -72,10 +73,10 @@ dat$K_BMI <- as.numeric(cut(dat$BMI, breaks = c(-Inf, 18.5, 24.9, 29.9, 34.9, 39
 # 6 "6. >40"
 
 # create BMI class
-dat$K_BMI2 <- as.numeric(cut(dat$BMI, breaks = c(-Inf, 18.5, 24.9, 29.9, Inf), include.lowest = TRUE))
+dat$K_BMI2 <- as.numeric(cut(dat$BMI, breaks = c(18.5, 24.9, 29.99), include.lowest = TRUE))
 
-test_that("no new NAs in BMI class",
-          expect_equal(sum(is.na(dat$BMI)), sum(is.na(dat$K_BMI2)))
+test_that("new NA since no one under 18.5 gets a class",
+          expect_lt(sum(is.na(dat$BMI)), sum(is.na(dat$K_BMI2)))
 )
 
 #labels
@@ -94,8 +95,10 @@ dat$Sambo <- ifelse(dat$FAMSIT == 1, 1,
 )
 
 # aggregate infertility treatments
-aggVars <- c("OFRIABEF","OFRISTIM","OFRIKIRU","OFRIICSI","OFRIANN")
-dat$INFBEH <- ifelse(rowSums(dat[, aggVars, with = FALSE],na.rm=TRUE)>1, 1, 0)
+#aggVars <- c("OFRIABEF","OFRISTIM","OFRIKIRU","OFRIICSI","OFRIANN")
+#dat$INFBEH <- ifelse(rowSums(dat[, aggVars, with = FALSE],na.rm=TRUE)>1, 1, 0)
+
+
 # length classification
 #quantile(dat$MLANGD, na.rm = TRUE, probs = c(0, 0.03, 0.10, 0.90, 0.97, 1))
 dat$K_MLANGD <- as.numeric(cut(dat$MLANGD, 
@@ -219,28 +222,29 @@ dat$FJOUR_02_07 <- ifelse(dat$FODKL >= 200 & dat$FODKL <=700, 1, 0)
 #dat$FSEM <- ifelse(dat$temp > 615 & dat$temp < 815, 1, 0)
 
 # Sven sandin/Marsal weight
-dat$marsalVikt =ifelse(dat$KON==1,
-                        -(1.907345*10**(-6))*dat$GRDBS**4 +
-                          (1.140644*10**(-3))*dat$GRDBS**3-
-                          1.336265*10**(-1)*dat$GRDBS**2+
-                          1.976961*10**(0)*dat$GRDBS+
-                          2.410053*10**(2),
-                        -(2.761948*10**(-6))*dat$GRDBS**4+
-                          (1.744841*10**(-3))*dat$GRDBS**3-
-                          2.893626*10**(-1)*dat$GRDBS**2+
-                          1.891197*10**(1)*dat$GRDBS-
-                          4.135122*10**(2)
-)
+#dat$marsalVikt =ifelse(dat$KON==1,
+#                        -(1.907345*10**(-6))*dat$GRVBS**4 +
+#                          (1.140644*10**(-3))*dat$GRVBS**3-
+#                          1.336265*10**(-1)*dat$GRVBS**2+
+#                          1.976961*10**(0)*dat$GRVBS+
+#                          2.410053*10**(2),
+#                        -(2.761948*10**(-6))*dat$GRVBS**4+
+#                          (1.744841*10**(-3))*dat$GRVBS**3-
+#                          2.893626*10**(-1)*dat$GRVBS**2+
+#                          1.891197*10**(1)*dat$GRVBS-
+#                          4.135122*10**(2)
+#)
 
 #dat$avvikelseMarsal=(dat$BVIKTBS-dat$marsalVikt)/(dat$marsalVikt*0.12)
 
-dat$S_Bvikt <- as.numeric(cut(dat$BVIKTBS,
-                               quantile(dat$BVIKTBS, na.rm = TRUE,
-                                        probs = c(0, 0.03, 0.10, 0.90, 0.97, 1)
-                               ),
-                              include.lowest = TRUE
-                              )
-                          )
+#dat$S_Bvikt <- as.numeric(cut(dat$BVIKTBS,
+#                               quantile(dat$BVIKTBS, na.rm = TRUE,
+#                                        probs = c(0, 0.03, 0.10, 0.90, 0.97, 1)
+#                               ),
+#                              include.lowest = TRUE
+#                              )
+#                          )
+
 #labels
 # 1 "1. <3%"
 # 2 "2. 3-10%"
@@ -251,7 +255,7 @@ dat$S_Bvikt <- as.numeric(cut(dat$BVIKTBS,
 
 
 # weight classification
-dat$B_vikt <- as.numeric(cut(dat$BVIKTBS, c(0, 2500, 3000, 4000, 4500, 5000, Inf),dig.lab = 5))
+#dat$B_vikt <- as.numeric(cut(dat$BVIKTBS, c(0, 2500, 3000, 4000, 4500, 5000, Inf),dig.lab = 5))
 
 #labels
 # 1 "1. < 2500 g"
@@ -323,11 +327,12 @@ for(variable in new_names){
   
   
   
-  newData <- data.frame(table(dat[, variable]))
+  newData <- data.frame(table(dat[, variable], useNA = "always"))
+  names(newData) <- c("value", "Antal")
 
   
-  #newData <- merge(newData, subset(factor_dictionary, var == variable), by = "value", all.x = TRUE) %>% 
-  #  select(value, label, Antal)
+  newData <- merge(newData, subset(labelDictionary, Variabel == variable), by = "value", all.x = TRUE) %>% 
+    select(value, label, Antal)
   
   
   #openxlsx::addStyle(wb, 

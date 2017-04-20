@@ -221,7 +221,17 @@ par <- par[,
 # Antag att mfr är personvektor och att vi endast tar med den första 
 # förekomsten av en individ både i snq oc i mfr. Detta är endast en temporär lösning!
 
+#dupes <- mfr[duplicated(mfr$lopnr_barn),"lopnr_barn"]
+#tmp <- mfr %>% filter(lopnr_barn %in% dupes)
+
 mfr <- mfr[!duplicated(mfr$lopnr_barn),]
+
+
+#dupes <- snq[duplicated(snq$lopnr_barn),"lopnr_barn"]
+#tmp <- snq %>% filter(lopnr_barn %in% dupes)
+
+
+snq$finns_i_snq <- 1
 
 snq <- 
   snq %>% 
@@ -266,6 +276,14 @@ test_that({"expect same ids in person vector as in outfile"},
 saveRDS(out, "Output/1_get_data.rds")
 #write.csv2(out, "Output/1_get_data.csv")
 
+raw_dataframe <- data.frame(
+  antal_rader = nrow(out),
+  antal_barn = sum(table(unique(out$lopnr_barn))),
+  antal_mor = sum(table(unique(out$lopnr_mamma))),
+  antal_snq = sum(out$finns_i_snq, na.rm = TRUE)
+  )
+
 # write log files 
 openxlsx::write.xlsx(listing_dataframe, "Output/1_listings.xlsx")
 openxlsx::write.xlsx(overlap_dataframe, "Output/1_overlap.xlsx")
+openxlsx::write.xlsx(raw_dataframe, "Output/1_info_analysfil.xlsx")
