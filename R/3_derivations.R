@@ -8,9 +8,13 @@ library(openxlsx)
 # read data
 dat <- readRDS("Output/2_diagnoses.rds")
 labelDictionary <- openxlsx::read.xlsx("Diagnoskoder/labelDictionary.xlsx", sheet = 1)
-
+sjukhusRegioner <- openxlsx::read.xlsx("Indata/regioner.xlsx", sheet = 1)
 
 names_before <- names(dat)
+
+
+#dat$K_Sjukniva <- 
+dat$MFOD_NORDEN <- ifelse(dat$MFODLAND %in% c("SVERIGE", "ISLAND", "DANMARK", "FINLAND", "NORGE"), 1, 0)
 
 # derivation from mfr variables
 dat$MLANGD <- ifelse(dat$MLANGD>200 | dat$MLANGD < 130, NA, dat$MLANGD)
@@ -73,16 +77,16 @@ dat$K_BMI <- as.numeric(cut(dat$BMI, breaks = c(-Inf, 18.5, 24.9, 29.9, 34.9, 39
 # 6 "6. >40"
 
 # create BMI class
-dat$K_BMI2 <- as.numeric(cut(dat$BMI, breaks = c(18.5, 24.9, 29.99), include.lowest = TRUE))
+dat$K_BMI2 <- ifelse(dat$BMI<25, 0, 1)
 
 test_that("new NA since no one under 18.5 gets a class",
           expect_lt(sum(is.na(dat$BMI)), sum(is.na(dat$K_BMI2)))
 )
 
 #labels
-# 1 "1. BMI <18.5- 24.9 (under/normalvikt)"
-# 2 "2. BMI 25-29.99 (value: övervikt)"
-# 3 "3. BMI >30 (value övervikt)"
+# 0 "0. BMI <18.5- 24.9 (under/normalvikt)"
+# 1 "1. BMI 25-29.99 (value: övervikt)"
+
 
 # ROK derivation
 dat$ROK <- ifelse(dat$ROK1==1, 0,
@@ -219,7 +223,7 @@ dat$FJOUR_02_07 <- ifelse(dat$FODKL >= 200 & dat$FODKL <=700, 1, 0)
 # "Semestertid"
 # numeric month day
 #dat$temp <- as.numeric(gsub("^....-|-", "", as.character(dat$BFODDAT)))
-#dat$FSEM <- ifelse(dat$temp > 615 & dat$temp < 815, 1, 0)
+dat$FSEM <- ifelse(substr(dat$BFODDAT, 5,6) %in% c("06", "07", "08"), 1, 0)
 
 # Sven sandin/Marsal weight
 #dat$marsalVikt =ifelse(dat$KON==1,
@@ -265,6 +269,8 @@ dat$FJOUR_02_07 <- ifelse(dat$FODKL >= 200 & dat$FODKL <=700, 1, 0)
 # 5 "5. >4500 - <5000g"
 # 6 "6. >5000g"
 
+dat$DM <- ifelse(rowSums(dat[,c("preDM", "gestDM")], na.rm = TRUE)>0, 1, 0)
+
 # APGAR classification
 dat$APGAR5_class <- as.numeric(cut(dat$APGAR5, c(0,4,7,10),
                                    include.lowest = TRUE))
@@ -308,6 +314,37 @@ test_that("no new NAs in GRVBS class",
 # 2 "2. Vecka 40-41+6"
 # 3 "3. >vecka 42"
 
+# Robson class
+dat$week_robson <- sample(1:100, nrow(dat), replace = TRUE)
+dat$parous_robson <- sample(0:1, nrow(dat), replace = TRUE)
+dat$simplex_robson <- sample(0:1, nrow(dat), replace = TRUE)
+dat$tidsect_robson <- sample(0:1, nrow(dat), replace = TRUE)
+dat$fstart_robson <- sample(0:1, nrow(dat), replace = TRUE)
+dat$bjsect_robson <- sample(0:1, nrow(dat), replace = TRUE)
+dat$sectio_robson <- sample(0:1, nrow(dat), replace = TRUE)
+
+
+  
+dat$Robson <- ifelse(dat$simplex==1 & dat$parous==0 & dat$week>36 & dat$bjsect=='1. Huvud' & dat$fstart=='Spontan',
+      "1",
+    ifelse(dat$simplex==1 & dat$parous==0 & dat$week>36 & dat$bjsect=='1. Huvud' & dat$fstart !='Spontan',
+      "2",  
+    ifelse(dat$simplex==1 & dat$parous==1 & dat$week>36 & dat$tidsect==0 & dat$bjsect=='1. Huvud' & dat$fstart=='Spontan',
+      "3",
+    ifelse(dat$simplex==1 & dat$parous==1 & dat$week>36 & dat$tidsect==0 & dat$bjsect=='1. Huvud' & dat$fstart != 'Spontan',
+      "4",
+    ifelse(dat$simplex==1 & dat$parous==1 & dat$week>36 & dat$tidsect==1 & dat$bjsect=='1. Huvud',
+      "5",
+    ifelse(dat$simplex==1 & dat$parous==0 & dat$bjsect=='3. Säte',
+      "6",
+    ifelse(dat$simplex==1 & dat$parous==1 & dat$bjsect=='3. Säte',
+      "7",
+    ifelse(dat$simplex==0,
+      "8",
+    ifelse(dat$simplex==1 & dat$bjsect=='2. Tvär',
+      "9",
+    ifelse(dat$simplex==1 & dat$week<37,
+      "10", NA))))))))))
 
 
 #----------------------------- print file --------------------------------------
