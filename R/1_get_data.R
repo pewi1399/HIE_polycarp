@@ -19,6 +19,7 @@ mfr <- read.table("Indata/Leverans_April_2017/UT_MFR_8467_2016.txt",
                   quote = "",
                   header = TRUE
 )
+#mfr <- haven::read_sas("Indata/Leverans_April_2017/UT_MFR_8467_2016.sas7bdat")
 
 par_ov <- read.table("Indata/Leverans_April_2017/UT_PAR_OV_8467_2016.txt", 
                   sep = "\t",
@@ -31,6 +32,103 @@ par_sv <- read.table("Indata/Leverans_April_2017/UT_PAR_SV_8467_2016.txt",
                   quote = "",
                   header = TRUE
 )
+#-------------------------------------------------------------------------------
+
+#--------------------------------- mfr validation ------------------------------
+#mfr <- mfr[1:1000, ]
+mfr_vars <- names(mfr)
+
+# create temporary dataset
+#mfr <- dat[,mfr_vars]
+
+# split variables by class
+mfr_classes <- sapply(mfr, class)
+
+#table(mfr_classes)
+
+mfr_numeric <- names(mfr_classes[mfr_classes == "numeric"])
+mfr_integer <- names(mfr_classes[mfr_classes == "integer"])
+mfr_factor <- names(mfr_classes[mfr_classes == "factor"])
+mfr_logical <- names(mfr_classes[mfr_classes == "logical"])
+
+
+test_that({"No vars dropped, length of pieces is equal to length of total"},
+          expect_equal(length(mfr_numeric) + length(mfr_integer) + 
+                         length(mfr_factor)+ length(mfr_logical)
+                       , expect = length(mfr_vars)
+          )
+)
+
+# list all factors
+table_list_before_mfr <- lapply(mfr[,c(mfr_integer, mfr_logical)], function(x){ table(x, useNA = "always")})
+
+
+# correct all factors converting dots to NA
+mfr[,mfr_factor] <- lapply(mfr[,mfr_factor], as.character)
+mfr[,mfr_factor] <- lapply(mfr[,mfr_factor], function(x){ifelse(x == "", NA, x)})
+
+# integers are most problematic
+singular_mfr <- sapply(mfr[,mfr_integer], function(x){ length(table(x)) <= 1})
+
+
+# replace singulars NA with 0
+mfr[,mfr_integer[singular_mfr]] <- lapply(mfr[,mfr_integer[singular_mfr]], function(x){ifelse(is.na(x), 0, x)})
+
+
+# list all factors
+table_list_after_mfr <- lapply(mfr[,c(mfr_integer, mfr_logical)], function(x){ table(x, useNA = "always")})
+
+wb <- openxlsx::createWorkbook()
+for(variable in c(mfr_integer, mfr_logical)){
+
+  
+  if(variable %in% c("lopnr_mamma", "lopnr_barn")){ next }
+  
+  print(variable)
+  
+  # max length for sheetname is 31 characters
+  openxlsx::addWorksheet(wb = wb, sheetName = substr(variable,1,31))
+  
+  oldData <- data.frame(table_list_before_mfr[variable])
+  names(oldData) <- c("Notering", "Antal")
+  
+  newData <- data.frame(table_list_after_mfr[variable])
+  names(newData) <- c("Notering", "Antal")
+
+  
+  
+  openxlsx::addStyle(wb, 
+                     sheet = substr(variable,1,31), 
+                     createStyle(fgFill = "#FF6666"),
+                     rows = 1:(nrow(oldData)+1),
+                     cols = 1:2,
+                     gridExpand = TRUE
+  )
+  
+  openxlsx::addStyle(wb, 
+                     sheet = substr(variable,1,31), 
+                     createStyle(fgFill = "#99e699"),
+                     rows = 1:(nrow(newData)+1),
+                     cols = 4:6,
+                     gridExpand = TRUE
+  )
+  
+  
+  openxlsx::writeData(wb = wb, 
+                      sheet = substr(variable, 1,31),
+                      startCol = 1,
+                      oldData
+  )
+  openxlsx::writeData(wb = wb, 
+                      sheet = substr(variable, 1,31),
+                      startCol = 4,
+                      newData
+  )
+}
+
+openxlsx::saveWorkbook(wb, "Output/1_mfr_tables.xlsx", overwrite = TRUE)
+
+
 #-------------------------------------------------------------------------------
 
 #-------------------------------- snq validation -------------------------------

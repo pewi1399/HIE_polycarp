@@ -78,6 +78,7 @@ test.*
 !/templates/*.html # save templates
 !/SQL/*.sql
 /data/*.* # data should not be saved
+/Output/*.* # data should not be saved
 /data/*
 /statusReport
 /excel

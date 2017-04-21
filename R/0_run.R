@@ -33,4 +33,6 @@ testfil <- cbind(
                 analysdata[sample(1:nrow(analysdata), 10000, replace = TRUE), derived_vars]
 )
 
+testfil[,mfr_vars] <- lapply(testfil[,mfr_vars], function(x){ifelse(is.na(x), 0, x)})
+
 haven::write_sav(testfil, "Output/0_testfil.sav")
