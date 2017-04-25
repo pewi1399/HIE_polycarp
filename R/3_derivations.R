@@ -8,12 +8,36 @@ library(openxlsx)
 # read data
 dat <- readRDS("Output/2_diagnoses.rds")
 labelDictionary <- openxlsx::read.xlsx("Diagnoskoder/labelDictionary.xlsx", sheet = 1)
+fodelseLand <- openxlsx::read.xlsx("Indata/fodland.xlsx", sheet = 1)
 sjukhusRegioner <- openxlsx::read.xlsx("Indata/regioner.xlsx", sheet = 1)
+sjukhusKoder <- openxlsx::read.xlsx("Indata/Sjukhuskoder 81 st.xlsx")
+names(sjukhusKoder) <- c("SJUKHUS", "SJUKHUSNAMN")
 
+sjukhusKoder <- sjukhusKoder[!duplicated(sjukhusKoder),]
+
+# spara namn innan bearbetningar
 names_before <- names(dat)
 
+# lägg till klartext för sjukhus
+dat <- merge(dat, sjukhusKoder, by = "SJUKHUS", all.x = TRUE)
 
-#dat$K_Sjukniva <- 
+# merge on region and kod
+sjukhusRegioner$EGEN <- NULL
+dat <- merge(dat, sjukhusRegioner, by = "SJUKHUSNAMN", all.x = TRUE)
+
+# merge on birthregion
+fodelseLand <- fodelseLand[!duplicated(fodelseLand),]
+dat <- merge(dat, fodelseLand, by = "MFODLAND", all.x = TRUE)
+
+
+#table(is.na(tmp$SJUKHUSNAMN))
+#table(is.na(tmp$SJUKHUSNIVA))
+#table(is.na(tmp$REGION))
+
+#test unique(dat$SJUKHUSNAMN)[!(unique(dat$SJUKHUSNAMN) %in% unique(sjukhusRegioner$SJUKHUSNAMN))]
+#test unique(dat$SJUKHUS)[!(unique(dat$SJUKHUS) %in% unique(sjukhusKoder$SJUKHUS))]
+
+# dat$K_Sjukniva <- 
 dat$MFOD_NORDEN <- ifelse(dat$MFODLAND %in% c("SVERIGE", "ISLAND", "DANMARK", "FINLAND", "NORGE"), 1, 0)
 
 # derivation from mfr variables
@@ -79,8 +103,8 @@ dat$K_BMI <- as.numeric(cut(dat$BMI, breaks = c(-Inf, 18.5, 24.9, 29.9, 34.9, 39
 # create BMI class
 dat$K_BMI2 <- ifelse(dat$BMI<25, 0, 1)
 
-test_that("new NA since no one under 18.5 gets a class",
-          expect_lt(sum(is.na(dat$BMI)), sum(is.na(dat$K_BMI2)))
+test_that("no new NA compared to BMI",
+          expect_equal(sum(is.na(dat$BMI)), sum(is.na(dat$K_BMI2)))
 )
 
 #labels
@@ -269,7 +293,19 @@ dat$FSEM <- ifelse(substr(dat$BFODDAT, 5,6) %in% c("06", "07", "08"), 1, 0)
 # 5 "5. >4500 - <5000g"
 # 6 "6. >5000g"
 
+# Hypertoni 
+dat$HT <- ifelse(rowSums(dat[,c("KroHT", "GravHT", "prekl", "Eklam")], na.rm = TRUE)>0, 1, 0)
+
+#labels
+# 0. Nej
+# 1. Ja (KroHT+ gravHT+ precla, + eclamsia  )
+
+# Diabetes
 dat$DM <- ifelse(rowSums(dat[,c("preDM", "gestDM")], na.rm = TRUE)>0, 1, 0)
+
+#labels
+# 0. Nej
+# 1. Ja
 
 # APGAR classification
 dat$APGAR5_class <- as.numeric(cut(dat$APGAR5, c(0,4,7,10),
@@ -315,36 +351,84 @@ test_that("no new NAs in GRVBS class",
 # 3 "3. >vecka 42"
 
 # Robson class
-dat$week_robson <- sample(1:100, nrow(dat), replace = TRUE)
-dat$parous_robson <- sample(0:1, nrow(dat), replace = TRUE)
-dat$simplex_robson <- sample(0:1, nrow(dat), replace = TRUE)
-dat$tidsect_robson <- sample(0:1, nrow(dat), replace = TRUE)
-dat$fstart_robson <- sample(0:1, nrow(dat), replace = TRUE)
-dat$bjsect_robson <- sample(0:1, nrow(dat), replace = TRUE)
-dat$sectio_robson <- sample(0:1, nrow(dat), replace = TRUE)
 
+# Variabler ###
+
+#sätt vecka = 35 om prematur sätt vecka = 42 om överburen
+dat$week_robson <- ifelse(is.na(dat$GRVBS) & dat$prematur_robson == 1, 36,
+                          ifelse(is.na(dat$GRVBS) & dat$overburen_robson == 1, 42, dat$GRVBS)
+)
+
+
+dat$parous_robson <- ifelse(dat$PARITET_F == 1, 1, 0)
+
+dat$simplex_robson <- ifelse(dat$BORDF2 == 1, 1, 0)
+
+dat$tidsect_robson <- ifelse(dat$TSECTIO == 1, 1, 0)
+
+
+dat$fstart_robson <- ifelse(dat$fstart_spontan_robson == 1, 3,
+                            ifelse(dat$fstart_induktion_diag_robson == 1 | dat$fstart_induktion_op_robson == 1 | dat$FLINDUKT == 1, 1 ,
+                                   ifelse(dat$fstart_elektiv_robson == 1 | dat$ELEKAKUT == 1, 2,
+                                          ifelse(dat$fstart_spontan_robson == 1, 3, NA)
+                                          )))
+
+#om fstart = missing antag  = 3 = spontan
+dat$fstart_robson[is.na(dat$fstart_robson)] <- 3
+
+# Levels
+# 1. Induktion
+# 2. Elektiv sectio
+# 3. Spontan
+
+dat$bjsect_robson <- ifelse(dat$bjsect_huvud_robson == 1, 1,
+                            ifelse(dat$bjsect_tvar_robson == 1, 2, 
+                                   ifelse(dat$bjsect_sate_robson == 1, 3, 
+                                          ifelse(dat$BJUDNING == 1 | dat$BJUDNING == 4, 1, 
+                                                 ifelse(dat$BJUDNING == 6, 3,
+                                                        ifelse(dat$TANG == 1, 1, NA)
+                                                 )))))
+
+# Levels
+# 1. Huvud
+# 2. Tvar
+# 3. Sate
+
+
+dat$sectio_robson <- ifelse(dat$fstart_robson == 2 | dat$sectio_robson == 1 | dat$SECAVSL == 1, 1, 0)
+###############
 
   
-dat$Robson <- ifelse(dat$simplex==1 & dat$parous==0 & dat$week>36 & dat$bjsect=='1. Huvud' & dat$fstart=='Spontan',
+# Klassificering
+dat$robson_number <- ifelse(dat$simplex_robson==1 & dat$parous_robson==0 & dat$week_robson>36 & dat$bjsect_robson==1 & dat$fstart_robson==3,
       "1",
-    ifelse(dat$simplex==1 & dat$parous==0 & dat$week>36 & dat$bjsect=='1. Huvud' & dat$fstart !='Spontan',
+    ifelse(dat$simplex_robson==1 & dat$parous_robson==0 & dat$week_robson>36 & dat$bjsect_robson==1 & dat$fstart_robson !=3,
       "2",  
-    ifelse(dat$simplex==1 & dat$parous==1 & dat$week>36 & dat$tidsect==0 & dat$bjsect=='1. Huvud' & dat$fstart=='Spontan',
+    ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$week_robson>36 & dat$tidsect_robson==0 & dat$bjsect_robson==1 & dat$fstart_robson==3,
       "3",
-    ifelse(dat$simplex==1 & dat$parous==1 & dat$week>36 & dat$tidsect==0 & dat$bjsect=='1. Huvud' & dat$fstart != 'Spontan',
+    ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$week_robson>36 & dat$tidsect_robson==0 & dat$bjsect_robson==1 & dat$fstart_robson != 3,
       "4",
-    ifelse(dat$simplex==1 & dat$parous==1 & dat$week>36 & dat$tidsect==1 & dat$bjsect=='1. Huvud',
+    ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$week_robson>36 & dat$tidsect_robson==1 & dat$bjsect_robson==1,
       "5",
-    ifelse(dat$simplex==1 & dat$parous==0 & dat$bjsect=='3. Säte',
+    ifelse(dat$simplex_robson==1 & dat$parous_robson==0 & dat$bjsect_robson== 3,
       "6",
-    ifelse(dat$simplex==1 & dat$parous==1 & dat$bjsect=='3. Säte',
+    ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$bjsect_robson== 3,
       "7",
-    ifelse(dat$simplex==0,
+    ifelse(dat$simplex_robson==0,
       "8",
-    ifelse(dat$simplex==1 & dat$bjsect=='2. Tvär',
+    ifelse(dat$simplex_robson==1 & dat$bjsect_robson== 2,
       "9",
-    ifelse(dat$simplex==1 & dat$week<37,
+    ifelse(dat$simplex_robson==1 & dat$week_robson<37,
       "10", NA))))))))))
+
+
+dat$robson_letter <- ifelse(dat$fstart_robson == 3, 1, 
+                            ifelse(dat$fstart_robson == 1, 2,
+                                   ifelse(dat$fstart_robson == 2, 3, NA)
+                                   )
+                            )
+
+dat$robson_class <- as.integer(ifelse(dat$robson_number %in% c("2", "4", "5", "8", "10"), paste0(dat$robson_number, dat$robson_letter), dat$robson_number))
 
 
 #----------------------------- print file --------------------------------------
