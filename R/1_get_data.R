@@ -302,6 +302,18 @@ mfr$BDIAG <- do.call(paste, c(mfr[,grep("BDIAG", names(mfr))]))
 mfr$BDIAG <- gsub(" NA.*$", "", mfr$BDIAG)
 mfr$BDIAG <- paste(" ", mfr$BDIAG, sep = "")
 
+# create singular column for diagnosis
+mfr$MFLOP <- do.call(paste, c(mfr[,grep("^FLOP", names(mfr))]))
+# format
+mfr$MFLOP <- gsub(" NA.*$", "", mfr$MFLOP)
+mfr$MFLOP <- paste(" ", mfr$MFLOP, sep = "")
+
+# create singular column for diagnosis
+mfr$BFLOP <- do.call(paste, c(mfr[,grep("^BFLOP", names(mfr))]))
+# format
+mfr$BFLOP <- gsub(" NA.*$", "", mfr$BFLOP)
+mfr$BFLOP <- paste(" ", mfr$BFLOP, sep = "")
+
 
 # create personal variable for diagnosis from par
 par <- setDT(rbind_list(par_ov, par_sv))

@@ -369,8 +369,8 @@ dat$tidsect_robson <- ifelse(dat$TSECTIO == 1, 1, 0)
 
 dat$fstart_robson <- ifelse(dat$fstart_spontan_robson == 1, 3,
                             ifelse(dat$fstart_induktion_diag_robson == 1 | dat$fstart_induktion_op_robson == 1 | dat$FLINDUKT == 1, 1 ,
-                                   ifelse(dat$fstart_elektiv_robson == 1 | dat$ELEKAKUT == 1, 2,
-                                          ifelse(dat$fstart_spontan_robson == 1, 3, NA)
+                                   ifelse(dat$fstart_elektiv_robson == 1 | dat$ELEKAKUT == 1 | dat$SECFORE == 1, 2,
+                                          ifelse(dat$fstart_spontan_robson == 1 | dat$FLSPONT == 1, 3, NA)
                                           )))
 
 #om fstart = missing antag  = 3 = spontan
@@ -386,7 +386,7 @@ dat$bjsect_robson <- ifelse(dat$bjsect_huvud_robson == 1, 1,
                                    ifelse(dat$bjsect_sate_robson == 1, 3, 
                                           ifelse(dat$BJUDNING == 1 | dat$BJUDNING == 4, 1, 
                                                  ifelse(dat$BJUDNING == 6, 3,
-                                                        ifelse(dat$TANG == 1, 1, NA)
+                                                        ifelse(dat$TANG == 1 | dat$SUGKLOCK == 1, 1, NA)
                                                  )))))
 
 # Levels

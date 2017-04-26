@@ -39,10 +39,12 @@ metadata <- metadata %>%
 metadataMor <- subset(metadata, Group == "mor")
 metadataBarn <- subset(metadata, Group == "barn")
 
+
 # split singles and factors
 metadataMorSingle <- subset(metadataMor, factor == "nej" & source == "mfr")
 metadataMorFactor <- subset(metadataMor, factor == "ja")
 metadataMorOp <-  subset(metadataMor, factor == "nej" & source == "mfrop")
+metadataBarnOp <-  subset(metadataBarn, factor == "nej" & source == "mfrop")
 
 # test that all diags are still there
 test_that("rows add up",
@@ -67,11 +69,43 @@ applySearch <- function(variable, phrase){
 dat[,(metadataBarn$variabel):=lapply(metadataBarn$search, applySearch, variable = dat$BDIAG),]
 dat[,(metadataMorSingle$variabel):=lapply(metadataMorSingle$search, applySearch, variable = dat$MDIAG),]
 
+dat[,(metadataBarnOp$variabel):=lapply(metadataBarnOp$search, applySearch, variable = dat$BDIAG),]
+dat[,(metadataMorOp$variabel):=lapply(metadataMorOp$search, applySearch, variable = dat$MDIAG),]
+
 dat$obstekat <- ifelse((dat$ruptur + 
                           dat$skulderdy + 
                           dat$Eklam + 
                           dat$prolaps + 
                           dat$abl) > 0, 1, 0)
+
+
+
+# loop in factor variables
+metadataMorFactor$factorLevel <- ifelse(is.na(metadataMorFactor$factorLevel),
+                                        metadataMorFactor$variabel, metadataMorFactor$factorLevel)
+
+diags <-unique(metadataMorFactor$variabel)
+
+dat <- data.frame(dat)
+
+for(i in 1:length(diags)){
+  dat[,diags[i]] <- 0
+  
+  sub_var <- subset(metadataMorFactor, variabel == diags[i])
+  
+  for(j in 1:nrow(sub_var)){
+    
+    criteria <- (dat[,diags[i]] == 0 |  dat[,diags[i]] >= j)
+    
+    dat[criteria, diags[i]] <- ifelse(
+                                                grepl(sub_var[j, "search"], dat[criteria,"MDIAG"]), 
+                                                sub_var[j , "level"], 
+                                                dat[criteria,diags[i]]
+                             )
+  }
+}
+
+setDT(dat)
 
 saveRDS(dat, "Output/2_diagnoses.rds")
 #-------------------------------------------------------------------------------
