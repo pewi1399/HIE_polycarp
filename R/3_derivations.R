@@ -29,6 +29,7 @@ dat <- merge(dat, sjukhusRegioner, by = "SJUKHUSNAMN", all.x = TRUE)
 fodelseLand <- fodelseLand[!duplicated(fodelseLand),]
 dat <- merge(dat, fodelseLand, by = "MFODLAND", all.x = TRUE)
 
+dat$LAND_GRUPP <- as.integer(as.factor(dat$LAND_GRUPP))
 
 #table(is.na(tmp$SJUKHUSNAMN))
 #table(is.na(tmp$SJUKHUSNIVA))
@@ -401,25 +402,25 @@ dat$sectio_robson <- ifelse(dat$fstart_robson == 2 | dat$sectio_robson == 1 | da
   
 # Klassificering
 dat$robson_number <- ifelse(dat$simplex_robson==1 & dat$parous_robson==0 & dat$week_robson>36 & dat$bjsect_robson==1 & dat$fstart_robson==3,
-      "1",
+      1,
     ifelse(dat$simplex_robson==1 & dat$parous_robson==0 & dat$week_robson>36 & dat$bjsect_robson==1 & dat$fstart_robson !=3,
-      "2",  
+      2,  
     ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$week_robson>36 & dat$tidsect_robson==0 & dat$bjsect_robson==1 & dat$fstart_robson==3,
-      "3",
+      3,
     ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$week_robson>36 & dat$tidsect_robson==0 & dat$bjsect_robson==1 & dat$fstart_robson != 3,
-      "4",
+      4,
     ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$week_robson>36 & dat$tidsect_robson==1 & dat$bjsect_robson==1,
-      "5",
+      5,
     ifelse(dat$simplex_robson==1 & dat$parous_robson==0 & dat$bjsect_robson== 3,
-      "6",
+      6,
     ifelse(dat$simplex_robson==1 & dat$parous_robson==1 & dat$bjsect_robson== 3,
-      "7",
+      7,
     ifelse(dat$simplex_robson==0,
-      "8",
+      8,
     ifelse(dat$simplex_robson==1 & dat$bjsect_robson== 2,
-      "9",
+      9,
     ifelse(dat$simplex_robson==1 & dat$week_robson<37,
-      "10", NA))))))))))
+      10, NA))))))))))
 
 
 dat$robson_letter <- ifelse(dat$fstart_robson == 3, 1, 
@@ -428,7 +429,7 @@ dat$robson_letter <- ifelse(dat$fstart_robson == 3, 1,
                                    )
                             )
 
-dat$robson_class <- as.integer(ifelse(dat$robson_number %in% c("2", "4", "5", "8", "10"), paste0(dat$robson_number, dat$robson_letter), dat$robson_number))
+dat$robson_class <- as.integer(ifelse(dat$robson_number %in% c(2, 4, 5, 8, 10), paste0(dat$robson_number, dat$robson_letter), dat$robson_number))
 
 
 #----------------------------- print file --------------------------------------
