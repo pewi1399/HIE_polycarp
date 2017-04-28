@@ -39,13 +39,12 @@ feberF	"feberF"
 chorit	"chorioamnionit"
 spontf	"spontanforl"
 flerb	"flerbord"
-humindik	"humanitarindik"
 tang	"tanforl"
 VE	"VE"
 Vet	"Vetang"
 sectioEl	"sectioEl"
 secak	"sectioakut"
-seca1_5	"sectioannan1"-5
+seca1_5	"sectioannan1-5"
 misslVE_Ta	"misslyckadVE_Tang"
 sate	"satesextrak"
 kramp	"kramp"
@@ -55,45 +54,29 @@ thyr	"thyrsjd"
 mkram	"Mkramper"
 indSyn	"InduktionSynto"
 stimSyn	"oxcytocinVarkstim"
-fokorit	"fosterkorionamninit"
-fosterpavsec	"fosterpavsectio"
 SGAdia	"SGAdia"
-CNSblod	"CNSblodning"
-kefal	"kefalhematom"
-frakt	"barnfakturer"
-nervskad	"nervskadabarn"
-andraforlskad	"andraforlossningsskador"
-korit	"korionamnionit"
-hypoxi	"hypoxiintraut"
 Asfyxi1_5	"Asfyxi1_5"
 asfyxiko	"afyxikortvarig"
 asfyxime	"sfyximedellang"
 asfyxi	"asfyxilangvarig"
-hie	"hie"
+hie_diagnos	"hie deriverad fran diagnoskod"
 respdistress	"respdistress"
-pneum	"pneumoni"
 aspiration	"aspiration"
-sepsisneo	"sepsisneo"
 blodfo	"blodningfostret"
-ikterus	"ikterus"
 krampneo	"krampneo"
-missbildn	"missbildningar"
-prematur_robson	"premeatur_robson"
-overburen_robson	"overburen_robson"
-fstart_induktion_diag_robson	"fstart_induktion_diag_robson"
-fstart_induktion_op_robson	"fstart_induktion_op_robson"
-fstart_elektiv_robson	"fstart_elektiv_robson"
-fstart_spontan_robson	"fstart_spontan_robson"
-bjsect_huvud_robson	"bjsect_huvud_robson"
-bjsect_tvar_robson	"bjsect_tvar_robson"
-bjsect_sate_robson	"bjsect_sate_robson"
-sectio_robson	"sectio_robson"
-. 
+Vattenavg_ng "Vattenavgang"
+HLR__tg_rder "HLR_atgarder"
+Hj_rtmassage "Hjartmassage"
+Intrakran__bl_dning "Intrakran__blodning"
+V_rdtid__inneliggande "Vardtid__inneliggande"
+X_lder_vid_d_dsfall__dagar_ "Alder_vid_dodsfall__dagar_"
+L_gsta_pH  "Lagsta_pH"
+H_gst_HIE "Hogst_HIE". 
 
 VALUE LABELS 
 / 
 MFOD_NORDEN
-0	"0. Övriga världen"
+0	"0. �vriga v�rlden"
 1	"1. Norden"
 /
 K_Malder
@@ -111,7 +94,7 @@ K_BMI
 /
 K_BMI2
 0	"0. BMI < 25 (under/normalvikt)"
-1	"1. BMI >= 25 (value: övervikt)"
+1	"1. BMI >= 25 (value: �vervikt)"
 /
 ROK
 0	"nej"
@@ -120,10 +103,6 @@ ROK
 Sambo
 1	"ja"
 2	"nej"
-/
-INFBEH
-0	"nej"
-1	"ja"
 /
 K_MLANGD
 1	"1. <3%"
@@ -172,23 +151,8 @@ FJOUR_02_07
 1	"ja"
 /
 FSEM
-0	"Övriga månader"
+0	"�vriga m�nader"
 1	"juni, juli, aug"
-/
-S_Bvikt
-1	"1. <3%"
-2	"2. 3-10%"
-3	"3. 10-90%"
-4	"4. 90-97%"
-5	"5. >97%"
-/
-B_vikt
-1	"1. < 2500 g"
-2	"2. 2500-  <3000g"
-3	"3. 3000-4000g"
-4	"4. >4000 - <4500g"
-5	"5. >4500 - <5000g"
-6	"6. >5000g"
 /
 HT
 0	"nej"
@@ -272,50 +236,21 @@ ACIDOS
 0	"0=nej"
 1	"1=Ja"
 /
-ARBETE
-1	"1=Heltid"
-2	"2=Deltid"
-3	"3=Nej"
-/
 ASTMA
 0	"Nej eller uppgift saknas"
 1	"1=Aktuell eller tidigare"
-/
-BJUDNING
-0	"0=Annan bjudning"
-1	"1=Framstupa nack- eller hjässbjudning (kronbjudning)"
-4	"4=Vidöppen nack- eller hjässbjudning"
-6	"6=Sätes- eller fotbjudning"
-/
-BORDF2
-1	"1=Enkelbörd"
-2	"2=Flerbörd"
-/
-CIVIL
-1	"1=Ogift"
-2	"2=Gift"
-3	"3=Förut gift"
 /
 DIABETES
 0	"Nej eller uppgift saknas"
 1	"1=Aktuell eller tidigare"
 /
-DKLASS
-1	"1=Dödfödd"
-2	"2=Död inom 0-6 dygn"
-3	"3=Död inom 7-27 dygn"
-/
-DODFOD
-1	"1=Före förlossningen"
-2	"2=Under förlossningen"
-/
 ELEKAKUT
 1	"1=Elektivt"
 2	"2=Akut"
 /
-EPIBL
-0	"0 = Nej"
-1	"1=Ja"
+ARBETE
+0       "0 = Hel eller deltid"
+1       "1 = Arbetsl�s"
 /
 EPILEPSI
 0	"Nej eller uppgift saknas"
@@ -324,12 +259,8 @@ EPILEPSI
 /
 FAMSIT
 1	"1=Sammanbor med barnafadern"
-2	"2=Ensamstående (undantaget år 1990-1994)"
-3	"3=Annan familjesituation (i denna kategori ingår ensamstående mödrar perioden 1990-1994)"
-/
-FBARN
-1	"1=Z00.1A Friskt barn undersökt på BB"
-2	"2=Andra diagnoser"
+2	"2=Ensamst�ende (undantaget �r 1990-1994)"
+3	"3=Annan familjesituation (i denna kategori ing�r ensamst�ende m�drar perioden 1990-1994)"
 /
 FLINDUKT
 0	"0 = Nej"
@@ -348,10 +279,6 @@ KON
 1	"1=Pojke"
 2	"2=Flicka"
 /
-MISSB
-0	"0 = Nej eller uppgift saknas"
-1	"1=Ja"
-/
 MLGA
 0	"0=Nej"
 1	"1=Ja"
@@ -360,26 +287,12 @@ MSGA
 0	"0=Nej"
 1	"1=Ja"
 /
-NJURSJUK
-0	"Nej eller uppgift saknas"
-1	"1=Aktuell eller tidigare"
-2	"2=Tidigare (endast under perioden 1990-93)"
-/
 OFRIABEF
 0	"0 = Nej eller uppgift saknas"
 1	"1=Ja"
 /
-OFRIIATG
-0	"0 = Nej eller uppgift saknas"
-1	"1=Ja"
-/
 ROK1
-1	"1=Röker ej"
-2	"2=1-9 cig/dag"
-3	"3=10 cig eller mer/dag"
-/
-ROK2
-1	"1=Röker ej"
+1	"1=R�ker ej"
 2	"2=1-9 cig/dag"
 3	"3=10 cig eller mer/dag"
 /
@@ -391,32 +304,7 @@ SECFORE
 0	"0 = Nej eller uppgift saknas"
 1	"1=Ja"
 /
-SECMARK
-0	"0 = Nej eller uppgift saknas
-1	"1 = Ja
-/
-SECTIO
-1	"1=Elektivt"
-2	"2=Ej elektivt"
-/
-SLE
-0	"Nej eller uppgift saknas"
-1	"1=Aktuell eller tidigare"
-2	"2=Tidigare (endast under perioden 1990-93)"
-/
-SNUS1
-0	"0=Nej"
-1	"1=Ja"
-/
-SNUS2
-0	"0=Nej"
-1	"1=Ja"
-/
 SUGKLOCK
-0	"0 = Nej eller uppgift saknas"
-1	"1=Ja"
-/
-SUGMARK
 0	"0 = Nej eller uppgift saknas"
 1	"1=Ja"
 /
@@ -424,26 +312,95 @@ TANG
 0	"0 = Nej eller uppgift saknas"
 1	"1=Ja"
 /
-TANGMARK
-0	"0 = Nej eller uppgift saknas"
-1	"1=Ja"
-/
 TSECTIO
 0	"0=Nej"
 1	"1=Ja"
 /
-ULCOLIT
-0	"Nej eller uppgift saknas"
-1	"1=Aktuell eller tidigare"
-2	"2=Tidigare (endast under perioden 1990-93)"
-/
-URINVINF
-0	"Nej eller uppgift saknas"
-1	"1=Aktuell eller tidigare"
-2	"2=Tidigare (endast under perioden 1990-93)"
-/
 VAGINAL
 0	"0 = Nej eller uppgift saknas"
 1	"1=Ja"
+/Antal_foster
+1	"1 Enkelb�rd"
+2	"2 Tvilling"
+3	"3 Trilling"
+/
+Vattenavg_ng
+1	"1 0-12 tim"
+2	"2 12-24 tim"
+3	"3 >24 tim - 1 v"
+4	"4 >1 v - 4 v"
+5	"5 >4 v"
+6	"99 Uppgift saknas"
+/
+HLR__tg_rder
+1	"0 Nej (vitalt barn)"
+2	"1 Ja (< 10 min)"
+3	"2 Ja (>= 10 min)"
+4	"3 Nej (ej meningsfullt)"
+5	"99 Uppgift saknas"
+/
+Extra_O_2
+1	"Ja"
+2	"Nej"
+/
+Hj_rtmassage
+1	"Ja"
+2	"Nej"
+/
+Intubation
+1	"Ja"
+2	"Nej"
+/
+Neonatolog
+1	"Ja"
+2	"Nej"
+/
+Multipla_kramper
+1	"Ja"
+2	"Nej"
+/
+Kramper
+1	"Ja"
+2	"Nej"
+/
+HIE
+1	"Ja"
+2	"Nej"
+/
+Behandlad_med_hypotermi
+1	"Ja"
+2	"Nej"
+/
+Hypoglukemi___2_6_efter_3_tim_
+1	"Ja"
+2	"Nej"
+/
+Avliden_enl_SNQ
+1	"Ja"
+2	"Nej"
+/
+Intrakran__bl_dning
+1	"Ja"
+2	"Nej"
+/
+langd_BMI
+1	"1= Normallang + normalviktig"
+2	"2= Kort + normalviktig"
+3	"3= Normallang +overvikt"
+4	"4= Kort+overvikt"
+/
+SJUKHUSNIVA
+1 "Universitetssjukhus"
+2 "Lanssjukhus"
+3 "Lansdelssjukhus"
+4 "ej befintlig forlossnings-/neovard"
+/
+REGION
+1   "Norra"
+2   "Uppsala-Orebro"
+3   "Stockholm"
+4   "Sydostra"
+5   "Vastra"
+6   "Sodra"
 /.
 

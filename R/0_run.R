@@ -58,9 +58,9 @@ analysdata_mini <- analysdata[, keep_vars]
 #---------------------------- write full data ---------------------------------- 
 
 if(FALSE){
-  system.time({
-      haven::write_sav(analysdata, "Output/0_analysdata.sav") #68.66 
-    })
+  #system.time({
+  #    haven::write_sav(analysdata, "Output/0_analysdata.sav") #68.66 
+  #  })
   
  # system.time({
  #   haven::write_dta (analysdata, "Output/0_analysdata.dta") #ERROR string to long
@@ -89,13 +89,13 @@ if(FALSE){
 #------------------------------- write minidata --------------------------------
 if(FALSE){
   
-  system.time({
-    haven::write_sav(analysdata_mini, "Output/0_analysdata_mini.sav") #25.35
-    })
-  
-  system.time({
-    haven::write_dta(analysdata_mini, "Output/0_analysdata_mini.dta") #25.09s 
-    })
+  #system.time({
+  #  haven::write_sav(analysdata_mini, "Output/0_analysdata_mini.sav") #25.35
+  #  })
+  #
+  #system.time({
+  #  haven::write_dta(analysdata_mini, "Output/0_analysdata_mini.dta") #25.09s 
+  #  })
   
   #system.time({
   #  openxlsx::write.xlsx(analysdata_mini, "Output/0_analysdata_mini.xlsx") # Memory Error
@@ -119,6 +119,15 @@ if(FALSE){
 
 
 #--------------------------------- testfil -------------------------------------
+# system.time({
+#   haven::write_sav(analysdata_mini[1:1000,], "Output/tmp.sav") #25.35
+# })
+# 
+# system.time({
+#   write.csv2(analysdata_mini[1:1000,], "Output/tmp.csv", 
+#              na = "", 
+#              row.names = FALSE) #25.35
+# })
 
 # mini1000 <- analysdata_mini[1:10000, ]
 # haven::write_sav(mini1000, "Output/0_analysdata_mini_10000.sav")

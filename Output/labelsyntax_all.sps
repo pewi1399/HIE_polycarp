@@ -39,13 +39,12 @@ feberF	"feberF"
 chorit	"chorioamnionit"
 spontf	"spontanforl"
 flerb	"flerbord"
-humindik	"humanitarindik"
 tang	"tanforl"
 VE	"VE"
 Vet	"Vetang"
 sectioEl	"sectioEl"
 secak	"sectioakut"
-seca1_5	"sectioannan1"-5
+seca1_5	"sectioannan1-5"
 misslVE_Ta	"misslyckadVE_Tang"
 sate	"satesextrak"
 kramp	"kramp"
@@ -55,7 +54,6 @@ thyr	"thyrsjd"
 mkram	"Mkramper"
 indSyn	"InduktionSynto"
 stimSyn	"oxcytocinVarkstim"
-fokorit	"fosterkorionamninit"
 fosterpavsec	"fosterpavsectio"
 SGAdia	"SGAdia"
 CNSblod	"CNSblodning"
@@ -63,6 +61,8 @@ kefal	"kefalhematom"
 frakt	"barnfakturer"
 nervskad	"nervskadabarn"
 andraforlskad	"andraforlossningsskador"
+bjsect_sate_robson	"bjsect_sate_robson"
+sectio_robson	"sectio_robson"
 korit	"korionamnionit"
 hypoxi	"hypoxiintraut"
 Asfyxi1_5	"Asfyxi1_5"
@@ -86,14 +86,24 @@ fstart_elektiv_robson	"fstart_elektiv_robson"
 fstart_spontan_robson	"fstart_spontan_robson"
 bjsect_huvud_robson	"bjsect_huvud_robson"
 bjsect_tvar_robson	"bjsect_tvar_robson"
-bjsect_sate_robson	"bjsect_sate_robson"
-sectio_robson	"sectio_robson"
+K_n "Kon"
+Vattenavg_ng "Vattenavgang"
+HLR__tg_rder "HLR_atgarder"
+Hj_rtmassage "Hjartmassage"
+Narkos_l_kare "Narkos_lakare"
+OB_GYN_l_kare "OB_GYN_lakare"
+Annan_l_kare "Annan_lakare"
+Ingen_l_kare "Ingen_lakare"
+Ingen_andningsst_rning "Ingen_andningsstorning"
+Thoraxdr_nage "Thoraxdr_nage"
+Intrakran__bl_dning "Intrakran__blodning"
+D_dsorsaken_bed_ms_vara_relatera "Dodsorsaken_bedoms_vara_relatera"
 . 
 
 VALUE LABELS 
 / 
 MFOD_NORDEN
-0	"0. Ã–vriga vÃ¤rlden"
+0	"0. Övriga världen"
 1	"1. Norden"
 /
 K_Malder
@@ -111,7 +121,7 @@ K_BMI
 /
 K_BMI2
 0	"0. BMI < 25 (under/normalvikt)"
-1	"1. BMI >= 25 (value: Ã¶vervikt)"
+1	"1. BMI >= 25 (value: övervikt)"
 /
 ROK
 0	"nej"
@@ -120,10 +130,6 @@ ROK
 Sambo
 1	"ja"
 2	"nej"
-/
-INFBEH
-0	"nej"
-1	"ja"
 /
 K_MLANGD
 1	"1. <3%"
@@ -172,23 +178,8 @@ FJOUR_02_07
 1	"ja"
 /
 FSEM
-0	"Ã–vriga mÃ¥nader"
+0	"Övriga månader"
 1	"juni, juli, aug"
-/
-S_Bvikt
-1	"1. <3%"
-2	"2. 3-10%"
-3	"3. 10-90%"
-4	"4. 90-97%"
-5	"5. >97%"
-/
-B_vikt
-1	"1. < 2500 g"
-2	"2. 2500-  <3000g"
-3	"3. 3000-4000g"
-4	"4. >4000 - <4500g"
-5	"5. >4500 - <5000g"
-6	"6. >5000g"
 /
 HT
 0	"nej"
@@ -283,31 +274,31 @@ ASTMA
 /
 BJUDNING
 0	"0=Annan bjudning"
-1	"1=Framstupa nack- eller hjÃ¤ssbjudning (kronbjudning)"
-4	"4=VidÃ¶ppen nack- eller hjÃ¤ssbjudning"
-6	"6=SÃ¤tes- eller fotbjudning"
+1	"1=Framstupa nack- eller hjässbjudning (kronbjudning)"
+4	"4=Vidöppen nack- eller hjässbjudning"
+6	"6=Sätes- eller fotbjudning"
 /
 BORDF2
-1	"1=EnkelbÃ¶rd"
-2	"2=FlerbÃ¶rd"
+1	"1=Enkelbörd"
+2	"2=Flerbörd"
 /
 CIVIL
 1	"1=Ogift"
 2	"2=Gift"
-3	"3=FÃ¶rut gift"
+3	"3=Förut gift"
 /
 DIABETES
 0	"Nej eller uppgift saknas"
 1	"1=Aktuell eller tidigare"
 /
 DKLASS
-1	"1=DÃ¶dfÃ¶dd"
-2	"2=DÃ¶d inom 0-6 dygn"
-3	"3=DÃ¶d inom 7-27 dygn"
+1	"1=Dödfödd"
+2	"2=Död inom 0-6 dygn"
+3	"3=Död inom 7-27 dygn"
 /
 DODFOD
-1	"1=FÃ¶re fÃ¶rlossningen"
-2	"2=Under fÃ¶rlossningen"
+1	"1=Före förlossningen"
+2	"2=Under förlossningen"
 /
 ELEKAKUT
 1	"1=Elektivt"
@@ -324,11 +315,11 @@ EPILEPSI
 /
 FAMSIT
 1	"1=Sammanbor med barnafadern"
-2	"2=EnsamstÃ¥ende (undantaget Ã¥r 1990-1994)"
-3	"3=Annan familjesituation (i denna kategori ingÃ¥r ensamstÃ¥ende mÃ¶drar perioden 1990-1994)"
+2	"2=Ensamstående (undantaget år 1990-1994)"
+3	"3=Annan familjesituation (i denna kategori ingår ensamstående mödrar perioden 1990-1994)"
 /
 FBARN
-1	"1=Z00.1A Friskt barn undersÃ¶kt pÃ¥ BB"
+1	"1=Z00.1A Friskt barn undersökt på BB"
 2	"2=Andra diagnoser"
 /
 FLINDUKT
@@ -374,12 +365,12 @@ OFRIIATG
 1	"1=Ja"
 /
 ROK1
-1	"1=RÃ¶ker ej"
+1	"1=Röker ej"
 2	"2=1-9 cig/dag"
 3	"3=10 cig eller mer/dag"
 /
 ROK2
-1	"1=RÃ¶ker ej"
+1	"1=Röker ej"
 2	"2=1-9 cig/dag"
 3	"3=10 cig eller mer/dag"
 /
@@ -392,8 +383,8 @@ SECFORE
 1	"1=Ja"
 /
 SECMARK
-0	"0 = Nej eller uppgift saknas
-1	"1 = Ja
+0	"0 = Nej eller uppgift saknas"
+1	"1 = Ja"
 /
 SECTIO
 1	"1=Elektivt"
@@ -445,5 +436,219 @@ URINVINF
 VAGINAL
 0	"0 = Nej eller uppgift saknas"
 1	"1=Ja"
+/
+Antal_foster
+1	"1 Enkelbörd"
+2	"2 Tvilling"
+3	"3 Trilling"
+/
+K_n
+1	"Flicka"
+2	"Oklart"
+3	"Pojke"
+/
+Vattenavg_ng
+1	"1 0-12 tim"
+2	"2 12-24 tim"
+3	"3 >24 tim - 1 v"
+4	"4 >1 v - 4 v"
+5	"5 >4 v"
+6	"99 Uppgift saknas"
+/
+HLR__tg_rder
+1	"0 Nej (vitalt barn)"
+2	"1 Ja (< 10 min)"
+3	"2 Ja (>= 10 min)"
+4	"3 Nej (ej meningsfullt)"
+5	"99 Uppgift saknas"
+/
+Extra_O_2
+1	"Ja"
+2	"Nej"
+/
+Hj_rtmassage
+1	"Ja"
+2	"Nej"
+/
+CPAP_via_mask
+1	"Ja"
+2	"Nej"
+/
+Adrenalin
+1	"Ja"
+2	"Nej"
+/
+Ventilation_via_mask
+1	"Ja"
+2	"Nej"
+/
+Acidoskorrektion
+1	"Ja"
+2	"Nej"
+/
+Intubation
+1	"Ja"
+2	"Nej"
+/
+Neonatolog
+1	"Ja"
+2	"Nej"
+/
+Barn__specialist
+1	"Ja"
+2	"Nej"
+/
+Barn__ej_specialist
+1	"Ja"
+2	"Nej"
+/
+Narkos_l_kare
+1	"Ja"
+2	"Nej"
+/
+OB_GYN_l_kare
+1	"Ja"
+2	"Nej"
+/
+Annan_l_kare
+1	"Ja"
+2	"Nej"
+/
+Ingen_l_kare
+1	"Ja"
+2	"Nej"
+/
+Avdelning
+1	"1 - Förlossning/Kejsarsnitt"
+2	"2 - BB avdelning"
+3	"3 - Neonatal avdelning"
+4	"4 - Annan avdelning/Övrigt"
+5	"5 - Barnet avled före intagning på vårdavd"
+6	"7 - Född utanför sjukhus,oplanerat"
+/
+Multipla_kramper
+1	"Ja"
+2	"Nej"
+/
+Ingen_andningsst_rning
+1	"Ja"
+2	"Nej"
+/
+NAS
+1	"Ja"
+2	"Nej"
+/
+PAS
+1	"Ja"
+2	"Nej"
+/
+MAS
+1	"Ja"
+2	"Nej"
+/
+RDS
+1	"Ja"
+2	"Nej"
+/
+Pneumothorax
+1	"Ja"
+2	"Nej"
+/
+Thoraxdr_nage
+1	"Ja"
+2	"Nej"
+/
+PPHN
+1	"Ja"
+2	"Nej"
+/
+Kramper
+1	"Ja"
+2	"Nej"
+/
+HIE
+1	"Ja"
+2	"Nej"
+/
+Antiepileptisk_beh_vid_utskrivni
+1	"Ja"
+2	"Nej"
+/
+Behandlad_med_hypotermi
+1	"Ja"
+2	"Nej"
+/
+Hypoglukemi___2_6_efter_3_tim_
+1	"Ja"
+2	"Nej"
+/
+Insulinbehandling
+1	"Ja"
+2	"Nej"
+/
+Ljusbeh
+1	"Ja"
+2	"Nej"
+/
+Hyperbilirubinemi
+1	"Ja"
+2	"Nej"
+/
+Missb__kromosom_avv_
+1	"Ja"
+2	"Nej"
+/
+Utskriven_till
+1	"1 Hemmet"
+2	"2 BB/motsvarande"
+3	"3 Annat sjukhus"
+4	"4 Annan avd/övrigt eget sjh"
+5	"5 Hemsjukv./perm. eget sjh"
+6	"6 Avliden"
+/
+Avliden_enl_SNQ
+1	"Ja"
+2	"Nej"
+/
+Obduktion
+1	"Ja"
+2	"Nej"
+/
+Missbildning
+1	"Ja"
+2	"Nej"
+/
+Perinatal_asfyxi
+1	"Ja"
+2	"Nej"
+/
+Andningssjd
+1	"Ja"
+2	"Nej"
+/
+Intrakran__bl_dning
+1	"Ja"
+2	"Nej"
+/
+Pneumothorax_0001
+1	"Ja"
+2	"Nej"
+/
+Infektion
+1	"Ja"
+2	"Nej"
+/
+Kromosomavvikelse
+1	"Ja"
+2	"Nej"
+/
+Annan_faktor
+1	"Ja"
+2	"Nej"
+/
+D_dsorsaken_bed_ms_vara_relatera
+1	"Ja"
+2	"Kan inte bedömas"
+3	"Nej"
 /.
 

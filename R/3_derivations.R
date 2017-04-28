@@ -175,9 +175,9 @@ test_that("no new NAs in length class 3",
 )
 
 #labels
-# 0 "0. < 161 cm"
-# 1 "1 161 -172"
-# 2 "2 >172"
+# 1 "1. < 161 cm"
+# 2 "2 161 -172"
+# 3 "3 >172"
 #tapply( dat$MLANGD, dat$K_MLANGD3, summary)
 
 dat$K_MLANGD4 <- ifelse(dat$MLANGD<=155, 1, 0)
@@ -190,8 +190,21 @@ test_that("no new NAs in length class 4",
 # 0 "0. > 155 cm"
 # 1 "1 <= 155 cm"
 
+dat$langd_BMI <- ifelse(dat$K_MLANGD3 > 1 & dat$K_BMI2 == 0, 1,
+                        ifelse(dat$K_MLANGD3 == 1 & dat$K_BMI2 == 0, 2,
+                               ifelse(dat$K_MLANGD3 > 1 & dat$K_BMI2 == 1, 3, 
+                                      ifelse(dat$K_MLANGD3 == 1 & dat$K_BMI2 == 1, 4, NA)
+                               )
+                        )
+)
 
+#tapply(dat$BMI, dat$langd_BMI, summary)
+#tapply(dat$MLANGD, dat$langd_BMI, summary)
 
+# 1 1= normallång + normalviktig
+# 2 2= Kort + normalviktig
+# 3 3=Normallång +övervikt
+# 4 4= Kort+Övervikt
 
 
 # "Bjudning"
@@ -430,6 +443,13 @@ dat$robson_letter <- ifelse(dat$fstart_robson == 3, 1,
                             )
 
 dat$robson_class <- as.integer(ifelse(dat$robson_number %in% c(2, 4, 5, 8, 10), paste0(dat$robson_number, dat$robson_letter), dat$robson_number))
+
+
+#Mail från lena 170428
+# if = 3 = arbetslös
+dat$ARBETE <- ifelse(dat$ARBETE== 3, 1, 0)
+
+
 
 
 #----------------------------- print file --------------------------------------

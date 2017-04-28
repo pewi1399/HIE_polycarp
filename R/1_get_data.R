@@ -230,7 +230,7 @@ for(variable in snq_factor){
                       newData
   )
 }
-
+openxlsx::write.xlsx(factor_dictionary, "Output/1_snq_factordictionary.xlsx", overwrite = TRUE)
 openxlsx::saveWorkbook(wb, "Output/1_snq_tables.xlsx", overwrite = TRUE)
 #-------------------------------------------------------------------------------
 
