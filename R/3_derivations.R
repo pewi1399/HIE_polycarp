@@ -264,28 +264,30 @@ dat$FJOUR_02_07 <- ifelse(dat$FODKL >= 200 & dat$FODKL <=700, 1, 0)
 dat$FSEM <- ifelse(substr(dat$BFODDAT, 5,6) %in% c("06", "07", "08"), 1, 0)
 
 # Sven sandin/Marsal weight
-#dat$marsalVikt =ifelse(dat$KON==1,
-#                        -(1.907345*10**(-6))*dat$GRVBS**4 +
-#                          (1.140644*10**(-3))*dat$GRVBS**3-
-#                          1.336265*10**(-1)*dat$GRVBS**2+
-#                          1.976961*10**(0)*dat$GRVBS+
-#                          2.410053*10**(2),
-#                        -(2.761948*10**(-6))*dat$GRVBS**4+
-#                          (1.744841*10**(-3))*dat$GRVBS**3-
-#                          2.893626*10**(-1)*dat$GRVBS**2+
-#                          1.891197*10**(1)*dat$GRVBS-
-#                          4.135122*10**(2)
-#)
+dat$marsalVikt =ifelse(dat$KON==1,
+                        -(1.907345*10**(-6))*dat$GRVBS**4 +
+                          (1.140644*10**(-3))*dat$GRVBS**3-
+                          1.336265*10**(-1)*dat$GRVBS**2+
+                          1.976961*10**(0)*dat$GRVBS+
+                          2.410053*10**(2),
+                        -(2.761948*10**(-6))*dat$GRVBS**4+
+                          (1.744841*10**(-3))*dat$GRVBS**3-
+                          2.893626*10**(-1)*dat$GRVBS**2+
+                          1.891197*10**(1)*dat$GRVBS-
+                          4.135122*10**(2)
+)
 
 #dat$avvikelseMarsal=(dat$BVIKTBS-dat$marsalVikt)/(dat$marsalVikt*0.12)
 
-#dat$S_Bvikt <- as.numeric(cut(dat$BVIKTBS,
-#                               quantile(dat$BVIKTBS, na.rm = TRUE,
-#                                        probs = c(0, 0.03, 0.10, 0.90, 0.97, 1)
-#                               ),
-#                              include.lowest = TRUE
-#                              )
-#                          )
+dat$BVIKT <- ifelse(dat$BVIKT>7000 | dat$BVIKT<1000, NA, dat$BVIKT)
+
+dat$S_Bvikt <- as.numeric(cut(dat$BVIKT,
+                               quantile(dat$BVIKT, na.rm = TRUE,
+                                        probs = c(0, 0.03, 0.10, 0.90, 0.97, 1)
+                               ),
+                              include.lowest = TRUE
+                              )
+                          )
 
 #labels
 # 1 "1. <3%"
@@ -297,7 +299,7 @@ dat$FSEM <- ifelse(substr(dat$BFODDAT, 5,6) %in% c("06", "07", "08"), 1, 0)
 
 
 # weight classification
-#dat$B_vikt <- as.numeric(cut(dat$BVIKTBS, c(0, 2500, 3000, 4000, 4500, 5000, Inf),dig.lab = 5))
+dat$B_vikt <- as.numeric(cut(dat$BVIKT, c(0, 2500, 3000, 4000, 4500, 5000, Inf),dig.lab = 5))
 
 #labels
 # 1 "1. < 2500 g"
@@ -450,6 +452,20 @@ dat$robson_class <- as.integer(ifelse(dat$robson_number %in% c(2, 4, 5, 8, 10), 
 dat$ARBETE <- ifelse(dat$ARBETE== 3, 1, 0)
 
 
+# berakna antal sectio
+dat$TSECAR_tmp <- ifelse((dat$SECAVSL ==1  | dat$SECFORE ==1) & is.na(dat$TSECAR), dat$AR, dat$TSECAR)
+
+setDT(dat)
+
+dat[,antalsectio:=(length(unique(TSECAR_tmp)) - 1), by = "lopnr_mamma"]
+
+# tmp <-
+#   dat %>% 
+#   filter(antalsectio >= 4) %>% 
+#   select(lopnr_mamma, lopnr_barn, AR,antalsectio, TSECAR, TSECTIO, SECFORE, SECAVSL, TSECAR_tmp) %>% 
+#   setDT
+# 
+# setkey(tmp, lopnr_mamma, AR)
 
 
 #----------------------------- print file --------------------------------------

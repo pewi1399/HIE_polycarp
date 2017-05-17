@@ -55,6 +55,10 @@ analysdata_mini <- analysdata[, keep_vars]
 #table(duplicated(toupper(names(analysdata))))
 #chars = sapply(analysdata, class) == "character"
 #characterdata <- analysdata[,chars]
+
+
+
+
 #---------------------------- write full data ---------------------------------- 
 
 if(FALSE){
@@ -115,6 +119,57 @@ if(FALSE){
   }) # 93.39 
 
   
+}
+
+#write kompletteringsdata
+if(FALSE){
+  
+  kompletteringVars <- c("lopnr_barn",
+                         "O903",
+                         "P50",
+                         "P500",
+                         "P501",
+                         "P502",
+                         "P503",
+                         "P504",
+                         "P505",
+                         "P508",
+                         "P509",
+                         "BVIKT",
+                         "S_Bvikt",
+                         "B_vikt",
+                         "TSECAR",
+                         "TSECTIO",
+                         "antalsectio")
+  
+  analysdata_komplettering <- analysdata[, kompletteringVars]
+  
+  system.time({
+    write.table(analysdata_komplettering, "Output/0_analysdata_komplettering.txt",
+                sep = "\t",
+                row.names = FALSE,
+                na = "") 
+  })
+  
+  
+  
+  
+}
+
+if(FALSE){
+  viktVars <- c("lopnr_barn",
+                         "BVIKT",
+                         "S_Bvikt",
+                         "B_vikt")
+  
+  analysdata_vikt <- analysdata[, viktVars]
+  
+  system.time({
+    write.table(analysdata_vikt, "Output/0_analysdata_vikt.txt",
+                sep = "\t",
+                row.names = FALSE,
+                na = "") 
+  })
 }
 
 

@@ -53,6 +53,7 @@ Thumbs.db
 .Rproj.user
 .Rhistory
 .RData
+.rds
 
 # Project specific #
 ####################
@@ -81,6 +82,8 @@ test.*
 /Output/*.* # data should not be saved
 /data/*
 /statusReport
+/Indata
+/Output
 /excel
 /sandbox/*
 !data/README.md

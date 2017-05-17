@@ -14,7 +14,7 @@ snq <- read.table("Indata/Leverans_April_2017/KVALREG_SNQ_8467_2016.txt",
                   header = TRUE
                   )
 
-mfr <- read.table("Indata/Leverans_April_2017/UT_MFR_8467_2016.txt", 
+mfr <- read.table("Indata/Komplettering_Maj_2017/UT_MFR_KOMPL_8467_2016.txt", 
                   sep = "\t",
                   quote = "",
                   header = TRUE
