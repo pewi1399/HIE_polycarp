@@ -173,6 +173,25 @@ if(FALSE){
 }
 
 
+if(FALSE){
+  dodVars <- c("lopnr_barn",
+                "DOD",
+                "DKLASS"
+               )
+  
+  analysdata$DOD <- ifelse(analysdata$DKLAS>0,1,0)
+  table(analysdata$DOD, analysdata$DKLASS)
+  
+  analysdata_dod <- analysdata[, dodVars]
+  
+  system.time({
+    write.table(analysdata_dod, "Output/0_analysdata_dod.txt",
+                sep = "\t",
+                row.names = FALSE,
+                na = "") 
+  })
+}
+
 #--------------------------------- testfil -------------------------------------
 # system.time({
 #   haven::write_sav(analysdata_mini[1:1000,], "Output/tmp.sav") #25.35

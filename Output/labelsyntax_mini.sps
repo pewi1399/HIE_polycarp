@@ -417,5 +417,15 @@ B_vikt
 4 ">4000 - <4500g"
 5 ">4500 - <5000g"
 6 ">5000g"
-/.
+/
+VALUE LABELS 
+/ 
+DOD
+0   "Ej död"
+1   "Död inom första 27 dygnen"
+/
+DKLASS
+2   "0-6 dygn"
+3   "7-27 dygn"
+.
 
